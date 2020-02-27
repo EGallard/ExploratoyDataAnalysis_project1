@@ -1,0 +1,51 @@
+#first change: working directory through R Studio options 
+#variable fileToRead with name of file
+fileToRead<-"~/Documents/COURSERA/4.ExploratoryDataAnalysis/project1/household_power_consumption.txt"
+
+#reading downloaded dataset in data variable
+data <-
+read.table(fileToRead, header=TRUE, sep=";",stringsAsFactors=FALSE, dec=".")
+
+#checking previous size estimation: nr rows*nr columns* 8 bytes/numeric
+object.size(data)
+head(data)
+
+#Just dates of interest in info variable
+info <- data[data$Date %in% c("1/2/2007", "2/2/2007"),]
+object.size(info)
+
+#variables to plot
+dateTime <- strptime(paste(info$Date, info$Time, sep=" "), "%d/%m/%Y %H:%M:%S") 
+gAp <- as.numeric(info$Global_active_power)
+subMetering1 <- as.numeric(info$Sub_metering_1)
+subMetering2 <- as.numeric(info$Sub_metering_2)
+subMetering3 <- as.numeric(info$Sub_metering_3)
+gRp <- as.numeric(info$Global_reactive_power)
+voltage <- as.numeric(info$Voltage)
+
+#plotting in png file Global Active Power 
+png("plot4.png", width = 480, height= 480)
+par(mfrow = c(2,2))
+plot(dateTime, gAp, type="l", xlab="", ylab="Global Active Power", cex=0.2)
+plot(dateTime, voltage, type="l", xlab="dateTime", ylab="Voltage")
+plot(dateTime, subMetering1, type="l", ylab="Energy sub metering", xlab="")
+lines(dateTime, subMetering2, type="l", col="red")
+lines(dateTime, subMetering3, type="l", col="blue")
+legend("topright", c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), lty=1, lwd=2.5, col=c("black", "red", "blue"), bty="o")
+plot(dateTime, gRp, type="l", xlab="datetime", ylab="Global_reactive_power")
+dev.off()
+
+
+#preview on screen
+par(mfrow = c(2,2))
+plot(dateTime, gAp, type="l", xlab="", ylab="Global Active Power", cex=0.2)
+plot(dateTime, voltage, type="l", xlab="dateTime", ylab="Voltage")
+
+plot(dateTime, subMetering1, type="l", ylab="Energy sub metering", xlab="")
+lines(dateTime, subMetering2, type="l", col="red")
+lines(dateTime, subMetering3, type="l", col="blue")
+legend("topright", c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), lty=1, lwd=2.5, col=c("black", "red", "blue"), bty="o")
+plot(dateTime, gRp, type="l", xlab="datetime", ylab="Global_reactive_power")
+lines(dateTime, subMetering3, type="l", col="blue")
+legend("topright", c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), lty=1, lwd=2.5, col=c("black", "red", "blue"))
+
